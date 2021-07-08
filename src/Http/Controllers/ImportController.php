@@ -118,7 +118,7 @@ class ImportController
             ->setModelClass($model_class)
             ->toArray($this->getFilePath($file), null);
 
-        foreach($row_data as $row){
+        foreach($row_data[0] as $row){
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
                 dd($u);
