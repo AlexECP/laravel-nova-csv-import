@@ -121,13 +121,23 @@ class ImportController
         foreach($row_data[0] as $row){
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
-                dd($u);
+                $u->update([
+                    "first_name" => $row['first_name'] ?? $u->first_name,
+                    "last_name" => $row['last_name'] ?? $u->last_name,
+                    "oe_tracker_number" => $row['oe_tracker_number'] ?? $u->oe_tracker_number,
+                    "state_of_license" => $row['state_of_license'] ?? $u->state_of_license,
+                    "license_number" => $row['license_number'] ?? $u->license_number,
+                ]);
+            }
+            else
+            {
+                \App\User::create($row);
             }
         }
 
-        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
-            return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
-        }
+        // if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
+        //     return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
+        // }
 
         return response()->json(['result' => 'success']);
     }
