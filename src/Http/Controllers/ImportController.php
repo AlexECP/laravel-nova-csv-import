@@ -143,7 +143,7 @@ class ImportController
             $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
             $course_user->save();
 
-            $u->notify(new \App\Notifications\LiveCourseUpload($this->course->id));
+            $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
         }
 
         // if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
