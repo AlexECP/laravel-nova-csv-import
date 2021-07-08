@@ -140,10 +140,23 @@ class ImportController
                 'user_id' => $u->id,
             ]);
             $course_user->passed_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
-            $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
-            $course_user->save();
+            
 
-            $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
+            if($course_user->sent_at ?? false)
+            {
+                if($row['force_send_email'] == 'yes'){
+                    $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
+                    $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+                }
+            }
+            else
+            {
+                $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
+                $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+            }
+
+            $course_user->save();
+            
         }
 
         // if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
