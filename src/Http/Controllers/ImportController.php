@@ -134,13 +134,13 @@ class ImportController
                $u = \App\User::create($row);
             }
 
-            $c = App\Course::where('course_credit_id',$row['course_id'])->orderBy('created_at','DESC')->first();
-            $course_user = App\CourseUser::firstOrNew([
+            $c = \App\Course::where('course_credit_id',$row['course_id'])->orderBy('created_at','DESC')->first();
+            $course_user = \App\CourseUser::firstOrNew([
                 'course_id' => $c->id,
                 'user_id' => $u->id,
             ]);
-            $course_user->passed_at = Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
-            $course_user->sent_at = Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+            $course_user->passed_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+            $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
             $course_user->save();
         }
 
