@@ -110,7 +110,7 @@ class ImportController
         $rules = $this->extractValidationRules($request, $resource)->toArray();
         $model_class = get_class($resource->resource);
 
-        $x = $this->importer
+        $row_data = $this->importer
             ->setResource($resource)
             ->setAttributes($attributes)
             ->setAttributeMap($attribute_map)
@@ -118,7 +118,12 @@ class ImportController
             ->setModelClass($model_class)
             ->toArray($this->getFilePath($file), null);
 
-        dd($x);
+        foreach($row_data as $row){
+            if($u = \App\User::where('email',$row['email'])->first() ?? false)
+            {
+                dd($u);
+            }
+        }
 
         if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
             return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
