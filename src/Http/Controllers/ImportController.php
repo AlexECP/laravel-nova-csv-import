@@ -110,13 +110,15 @@ class ImportController
         $rules = $this->extractValidationRules($request, $resource)->toArray();
         $model_class = get_class($resource->resource);
 
-        $this->importer
+        $x = $this->importer
             ->setResource($resource)
             ->setAttributes($attributes)
             ->setAttributeMap($attribute_map)
             ->setRules($rules)
             ->setModelClass($model_class)
-            ->import($this->getFilePath($file), null);
+            ->toArray($this->getFilePath($file), null);
+
+        dd($x);
 
         if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
             return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
