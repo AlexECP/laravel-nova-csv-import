@@ -125,7 +125,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithBatchInse
         return $this;
     }
 
-    private function mapRowDataToAttributes($row)
+    public function mapRowDataToAttributes($row)
     {
         $data = [];
 

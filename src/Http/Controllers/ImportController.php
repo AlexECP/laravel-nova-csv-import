@@ -117,8 +117,9 @@ class ImportController
             ->setRules($rules)
             ->setModelClass($model_class)
             ->toArray($this->getFilePath($file), null);
-        // dd($row_data);
         foreach($row_data[0] as $row){
+            $row = $this->importer->mapRowDataToAttributes($row);
+
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
                 $u->update([
