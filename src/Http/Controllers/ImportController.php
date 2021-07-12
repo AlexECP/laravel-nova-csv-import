@@ -134,7 +134,7 @@ class ImportController
                $u = \App\User::create($row);
             }
 
-            $c = \App\Course::where('course_credit_id',$row['course_credit_id'])->orderBy('created_at','DESC')->first();
+            $c = \App\Course::where('course_credit_id',$row['course_id'])->orderBy('created_at','DESC')->first();
             $course_user = \App\CourseUser::firstOrNew([
                 'course_id' => $c->id,
                 'user_id' => $u->id,
