@@ -36,7 +36,7 @@ class ImportController
 
         $sample = $import->take(10)->all();
 
-        $resources = $this->getAvailableResourcesForImport($request); 
+        $resources = $this->getAvailableResourcesForImport($request);
 
         $fields = $resources->mapWithKeys(function ($resource) use ($request) {
             return $this->getAvailableFieldsForImport($resource, $request);
@@ -66,7 +66,7 @@ class ImportController
                         'attribute' => $field->attribute
                     ];
                 });
-        
+
        return [$novaResource->uriKey() => $fields];
     }
 
@@ -82,9 +82,9 @@ class ImportController
                     if (!isset($resource::$model)) {
                         return false;
                     }
-                    
+
                     $resourceReflection = (new \ReflectionClass((string) $resource));
-                    
+
                     if ($resourceReflection->hasMethod('canImportResource')) {
                         return $resource::canImportResource($request);
                     }
@@ -117,7 +117,7 @@ class ImportController
             ->setRules($rules)
             ->setModelClass($model_class)
             ->toArray($this->getFilePath($file), null);
-
+        // dd($row_data);
         foreach($row_data[0] as $row){
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
@@ -134,13 +134,13 @@ class ImportController
                $u = \App\User::create($row);
             }
 
-            $c = \App\Course::where('course_credit_id',$row['course_id'])->orderBy('created_at','DESC')->first();
+            $c = \App\Course::where('course_credit_id',$row['course_credit_id'])->orderBy('created_at','DESC')->first();
             $course_user = \App\CourseUser::firstOrNew([
                 'course_id' => $c->id,
                 'user_id' => $u->id,
             ]);
             $course_user->passed_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
-            
+
 
             if($course_user->sent_at ?? false)
             {
@@ -156,7 +156,7 @@ class ImportController
             }
 
             $course_user->save();
-            
+
         }
 
         // if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
