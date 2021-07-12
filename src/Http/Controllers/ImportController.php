@@ -119,7 +119,7 @@ class ImportController
             ->toArray($this->getFilePath($file), null);
         foreach($row_data[0] as $row){
             $row = $this->importer->mapRowDataToAttributes($row);
-
+            if(!$row['first_name'] ?? false) continue;
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
                 $u->update([
@@ -129,6 +129,7 @@ class ImportController
                     "state_of_license" => $row['state_of_license'] ?? $u->state_of_license,
                     "license_number" => $row['license_number'] ?? $u->license_number,
                 ]);
+
             }
             else
             {
@@ -145,10 +146,13 @@ class ImportController
 
             if($course_user->sent_at ?? false)
             {
-                if($row['force_send_email'] == 'yes'){
-                    $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
-                    $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+                if($row['force_send_email'] ?? false){
+                    if($row['force_send_email'] == 'yes'){
+                        $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
+                        $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
+                    }
                 }
+
             }
             else
             {
