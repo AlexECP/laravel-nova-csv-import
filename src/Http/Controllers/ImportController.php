@@ -120,6 +120,7 @@ class ImportController
         foreach($row_data[0] as $row){
             $row = $this->importer->mapRowDataToAttributes($row);
             if(!$row['first_name'] ?? false) continue;
+            $row['email'] = strtolower(trim($row['email']));
             if($u = \App\User::where('email',$row['email'])->first() ?? false)
             {
                 $u->update([
