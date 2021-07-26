@@ -147,7 +147,7 @@ class ImportController
             if($course_user->sent_at ?? false)
             {
                 if($row['force_send_email'] ?? false){
-                    if($row['force_send_email'] == 'yes'){
+                    if(filter_var($row['force_send_email'], FILTER_VALIDATE_BOOLEAN)){
                         $u->notify(new \App\Notifications\LiveCourseUpload($c->id));
                         $course_user->sent_at = \Carbon\Carbon::parse($row['passed_at'],'America/New_York')->utc()->toDateTimeString();
                     }
